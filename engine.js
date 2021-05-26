@@ -4,6 +4,7 @@ var wrap = require('word-wrap');
 var map = require('lodash.map');
 var longest = require('longest');
 var chalk = require('chalk');
+const branch = require('git-branch');
 
 var filter = function(array) {
   return array.filter(function(x) {
@@ -47,6 +48,11 @@ module.exports = function(options) {
     };
   });
 
+  var branchName = branch.sync() || '';
+  var issueIdFound = branchName.match(/(?<issueId>[0-9]+)-[a-z]+/) || [];
+  var issueId = issueIdFound && issueIdFound.groups && issueIdFound.groups.issueId;
+  var defaultIssue = issueId && ('#' + issueId) || '';
+
   return {
     // When a user runs `git cz`, prompter will
     // be executed. We pass you cz, which currently
@@ -74,6 +80,23 @@ module.exports = function(options) {
           message: "Select the type of change that you're committing:",
           choices: choices,
           default: options.defaultType
+        },
+        {
+          type: 'input',
+          name: 'issues',
+          message: 'Add issue references (e.g. "#123", "project#123".):\n',
+          default: defaultIssue || '',
+          validate: function(issues) {
+            issues = issues.trim();
+            return issues.length == 0
+              ? 'Issue is required'
+              : /^.*(\#)\d+.*$/.test(issues)
+              ? true
+              : 'Issues must match the stated format';
+          },
+          filter: function(issues) {
+            return issues.trim();
+          }
         },
         {
           type: 'input',
@@ -158,34 +181,6 @@ module.exports = function(options) {
           when: function(answers) {
             return answers.isBreaking;
           }
-        },
-
-        {
-          type: 'confirm',
-          name: 'isIssueAffected',
-          message: 'Does this change affect any open issues?',
-          default: options.defaultIssues ? true : false
-        },
-        {
-          type: 'input',
-          name: 'issuesBody',
-          default: '-',
-          message:
-            'If issues are closed, the commit requires a body. Please enter a longer description of the commit itself:\n',
-          when: function(answers) {
-            return (
-              answers.isIssueAffected && !answers.body && !answers.breakingBody
-            );
-          }
-        },
-        {
-          type: 'input',
-          name: 'issues',
-          message: 'Add issue references (e.g. "fix #123", "re #123".):\n',
-          when: function(answers) {
-            return answers.isIssueAffected;
-          },
-          default: options.defaultIssues ? options.defaultIssues : undefined
         }
       ]).then(function(answers) {
         var wrapOptions = {
@@ -199,8 +194,10 @@ module.exports = function(options) {
         // parentheses are only needed when a scope is present
         var scope = answers.scope ? '(' + answers.scope + ')' : '';
 
+        var issues = answers.issues ? answers.issues + ' ' : '';
+
         // Hard limit this line in the validate
-        var head = answers.type + scope + ': ' + answers.subject;
+        var head = issues + answers.type + scope + ': ' + answers.subject;
 
         // Wrap these lines at options.maxLineWidth characters
         var body = answers.body ? wrap(answers.body, wrapOptions) : false;
@@ -212,9 +209,7 @@ module.exports = function(options) {
           : '';
         breaking = breaking ? wrap(breaking, wrapOptions) : false;
 
-        var issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
-
-        commit(filter([head, body, breaking, issues]).join('\n\n'));
+        commit(filter([head, body, breaking]).join('\n\n'));
       });
     }
   };

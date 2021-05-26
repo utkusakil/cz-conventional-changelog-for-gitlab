@@ -1,7 +1,7 @@
 {
-  "name": "cz-conventional-changelog",
+  "name": "cz-conventional-changelog-for-gitlab",
   "version": "0.0.0-semantically-released.0",
-  "description": "Commitizen adapter following the conventional-changelog format.",
+  "description": "Commitizen adapter following the conventional-changelog format and also asking for GitLab issue.",
   "main": "index.js",
   "scripts": {
     "commit": "git-cz",
@@ -9,21 +9,22 @@
     "format": "prettier --write *.js",
     "semantic-release": "semantic-release"
   },
-  "homepage": "https://github.com/commitizen/cz-conventional-changelog",
+  "homepage": "https://github.com/utkusakil/cz-conventional-changelog-for-gitlab",
   "repository": {
     "type": "git",
-    "url": "https://github.com/commitizen/cz-conventional-changelog.git"
+    "url": "https://github.com/utkusakil/cz-conventional-changelog-for-gitlab.git"
   },
   "engineStrict": true,
   "engines": {
     "node": ">= 10"
   },
-  "author": "Jim Cummins <jimthedev@gmail.com>",
+  "author": "Utku Sakil (http://github.com/https://github.com/utkusakil)",
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
     "commitizen": "^4.0.3",
     "conventional-commit-types": "^3.0.0",
+    "git-branch": "^2.0.1",
     "lodash.map": "^4.5.1",
     "longest": "^2.0.1",
     "word-wrap": "^1.0.3"

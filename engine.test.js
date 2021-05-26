@@ -31,21 +31,12 @@ var longBodySplit =
   '\n' +
   longBody.slice(defaultOptions.maxLineWidth * 2, longBody.length).trim();
 var body = 'A quick brown fox jumps over the dog';
-var issues = 'a issues is not a person that kicks things';
-var longIssues =
-  'b b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b' +
-  'b b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b' +
-  'b b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b';
+var issues = '#12';
+var multipleIssues = '#1 #14';
+var issuesWithProject = 'project#12';
+var invalidIssues = '1';
 var breakingChange = 'BREAKING CHANGE: ';
 var breaking = 'asdhdfkjhbakjdhjkashd adhfajkhs asdhkjdsh ahshd';
-var longIssuesSplit =
-  longIssues.slice(0, defaultOptions.maxLineWidth).trim() +
-  '\n' +
-  longIssues
-    .slice(defaultOptions.maxLineWidth, defaultOptions.maxLineWidth * 2)
-    .trim() +
-  '\n' +
-  longIssues.slice(defaultOptions.maxLineWidth * 2, longIssues.length).trim();
 
 describe('commit message', function() {
   it('only header w/ out scope', function() {
@@ -122,44 +113,44 @@ describe('commit message', function() {
     expect(
       commitMessage({
         type,
+        issues,
         subject,
-        body,
-        issues
+        body
       })
-    ).to.equal(`${type}: ${subject}\n\n${body}\n\n${issues}`);
+    ).to.equal(`${issues} ${type}: ${subject}\n\n${body}`);
   });
   it('header, body and issues w/ scope', function() {
     expect(
       commitMessage({
         type,
+        issues,
         scope,
         subject,
-        body,
-        issues
+        body
       })
-    ).to.equal(`${type}(${scope}): ${subject}\n\n${body}\n\n${issues}`);
+    ).to.equal(`${issues} ${type}(${scope}): ${subject}\n\n${body}`);
   });
-  it('header, body and long issues w/ out scope', function() {
+  it('header, body and multiple issues w/ out scope', function() {
     expect(
       commitMessage({
         type,
         subject,
         body,
-        issues: longIssues
+        issues: multipleIssues
       })
-    ).to.equal(`${type}: ${subject}\n\n${body}\n\n${longIssuesSplit}`);
+    ).to.equal(`${multipleIssues} ${type}: ${subject}\n\n${body}`);
   });
-  it('header, body and long issues w/ scope', function() {
+  it('header, body and multiple issues w/ scope', function() {
     expect(
       commitMessage({
         type,
         scope,
         subject,
         body,
-        issues: longIssues
+        issues: multipleIssues
       })
     ).to.equal(
-      `${type}(${scope}): ${subject}\n\n${body}\n\n${longIssuesSplit}`
+      `${multipleIssues} ${type}(${scope}): ${subject}\n\n${body}`
     );
   });
   it('header and long body w/ out scope', function() {
@@ -189,7 +180,7 @@ describe('commit message', function() {
         body: longBody,
         issues
       })
-    ).to.equal(`${type}: ${subject}\n\n${longBodySplit}\n\n${issues}`);
+    ).to.equal(`${issues} ${type}: ${subject}\n\n${longBodySplit}`);
   });
   it('header, long body and issues w/ scope', function() {
     expect(
@@ -201,33 +192,33 @@ describe('commit message', function() {
         issues
       })
     ).to.equal(
-      `${type}(${scope}): ${subject}\n\n${longBodySplit}\n\n${issues}`
+      `${issues} ${type}(${scope}): ${subject}\n\n${longBodySplit}`
     );
   });
-  it('header, long body and long issues w/ out scope', function() {
+  it('header, long body and multiple issues w/ out scope', function() {
     expect(
       commitMessage({
         type,
         subject,
         body: longBody,
-        issues: longIssues
+        issues: multipleIssues
       })
-    ).to.equal(`${type}: ${subject}\n\n${longBodySplit}\n\n${longIssuesSplit}`);
+    ).to.equal(`${multipleIssues} ${type}: ${subject}\n\n${longBodySplit}`);
   });
-  it('header, long body and long issues w/ scope', function() {
+  it('header, long body and issues with project w/ scope', function() {
     expect(
       commitMessage({
         type,
         scope,
         subject,
         body: longBody,
-        issues: longIssues
+        issues: issuesWithProject
       })
     ).to.equal(
-      `${type}(${scope}): ${subject}\n\n${longBodySplit}\n\n${longIssuesSplit}`
+      `${issuesWithProject} ${type}(${scope}): ${subject}\n\n${longBodySplit}`
     );
   });
-  it('header, long body, breaking change, and long issues w/ scope', function() {
+  it('header, long body, breaking change, and multiple issues w/ scope', function() {
     expect(
       commitMessage({
         type,
@@ -235,13 +226,13 @@ describe('commit message', function() {
         subject,
         body: longBody,
         breaking,
-        issues: longIssues
+        issues: multipleIssues
       })
     ).to.equal(
-      `${type}(${scope}): ${subject}\n\n${longBodySplit}\n\n${breakingChange}${breaking}\n\n${longIssuesSplit}`
+      `${multipleIssues} ${type}(${scope}): ${subject}\n\n${longBodySplit}\n\n${breakingChange}${breaking}`
     );
   });
-  it('header, long body, breaking change (with prefix entered), and long issues w/ scope', function() {
+  it('header, long body, breaking change (with prefix entered), and issues with project w/ scope', function() {
     expect(
       commitMessage({
         type,
@@ -249,10 +240,10 @@ describe('commit message', function() {
         subject,
         body: longBody,
         breaking: `${breakingChange}${breaking}`,
-        issues: longIssues
+        issues: issuesWithProject
       })
     ).to.equal(
-      `${type}(${scope}): ${subject}\n\n${longBodySplit}\n\n${breakingChange}${breaking}\n\n${longIssuesSplit}`
+      `${issuesWithProject} ${type}(${scope}): ${subject}\n\n${longBodySplit}\n\n${breakingChange}${breaking}`
     );
   });
 });
@@ -278,6 +269,26 @@ describe('validation', function() {
         subject: ''
       })
     ).to.throw('subject is required');
+  });
+  it('issues does not match regex', function() {
+    expect(() =>
+      commitMessage({
+        type,
+        issues: invalidIssues,
+        scope,
+        subject: body
+      })
+    ).to.throw('Issues must match the stated format');
+  });
+  it('empty issues', function() {
+    expect(() =>
+      commitMessage({
+        type,
+        issues: '',
+        scope,
+        subject: body
+      })
+    ).to.throw('Issue is required');
   });
 });
 
@@ -317,19 +328,6 @@ describe('defaults', function() {
     expect(
       questionDefault('body', customOptions({ defaultBody: body }))
     ).to.equal(body);
-  });
-  it('defaultIssues default', function() {
-    expect(questionDefault('issues')).to.be.undefined;
-  });
-  it('defaultIssues options', function() {
-    expect(
-      questionDefault(
-        'issues',
-        customOptions({
-          defaultIssues: issues
-        })
-      )
-    ).to.equal(issues);
   });
   it('disableScopeLowerCase default', function() {
     expect(questionDefault('disableScopeLowerCase')).to.be.undefined;
@@ -388,14 +386,6 @@ describe('when', function() {
     expect(
       questionWhen('breaking', {
         isBreaking: true
-      })
-    ).to.be.true);
-  it('issues by default', () =>
-    expect(questionWhen('issues', {})).to.be.undefined);
-  it('issues when isIssueAffected', () =>
-    expect(
-      questionWhen('issues', {
-        isIssueAffected: true
       })
     ).to.be.true);
 });
