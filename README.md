@@ -1,4 +1,4 @@
-# cz-conventional-changelog
+# cz-conventional-changelog-for-gitlab
 
 Status:
 [![npm version](https://img.shields.io/npm/v/cz-conventional-changelog-for-gitlab.svg?style=flat-square)](https://www.npmjs.org/package/cz-conventional-changelog-for-gitlab)
