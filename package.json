@@ -18,7 +18,7 @@
   "engines": {
     "node": ">= 10"
   },
-  "author": "Utku Sakil (http://github.com/https://github.com/utkusakil)",
+  "author": "Utku Sakil (https://github.com/utkusakil)",
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
