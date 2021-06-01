@@ -2,7 +2,7 @@
 
 Status:
 [![npm version](https://img.shields.io/npm/v/cz-conventional-changelog-for-gitlab.svg?style=flat-square)](https://www.npmjs.org/package/cz-conventional-changelog-for-gitlab)
-[![npm downloads](https://img.shields.io/npm/dm/cz-conventional-changelog-for-gitlab.svg?style=flat-square)](http://npm-stat.com/charts.html?package=cz-conventional-changelog&from=2021-05-26)
+[![npm downloads](https://img.shields.io/npm/dm/cz-conventional-changelog-for-gitlab.svg?style=flat-square)](http://npm-stat.com/charts.html?package=cz-conventional-changelog-for-gitlab&from=2021-05-26)
 [![Build Status](https://img.shields.io/travis/utkusakil/cz-conventional-changelog-for-gitlab.svg?style=flat-square)](https://travis-ci.com/utkusakil/cz-conventional-changelog-for-gitlab)
 
 Part of the [commitizen](https://github.com/commitizen/cz-cli) family. Prompts for [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) standard and a mandatory GitLab issue.
